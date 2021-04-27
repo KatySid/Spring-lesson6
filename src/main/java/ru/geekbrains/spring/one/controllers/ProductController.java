@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.spring.one.model.Category;
 import ru.geekbrains.spring.one.model.Product;
+import ru.geekbrains.spring.one.services.CategoryService;
 import ru.geekbrains.spring.one.services.ProductService;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.Optional;
 @Controller
 public class ProductController {
     private ProductService productService;
+    private CategoryService categoryService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/")
@@ -47,9 +50,13 @@ public class ProductController {
     }
 
     @PostMapping("/products/add")
-    public String createNewProduct(@ModelAttribute Product product) {
-
-        productService.save(product);
+    public String createNewProduct(@RequestParam String title, @RequestParam int price, @RequestParam Long categoryId) {
+       Product product = new Product();
+       product.setTitle(title);
+       product.setPrice(price);
+       Category category1 = categoryService.findOneById(categoryId).get();
+       product.setCategory(category1);
+       productService.save(product);
         return "redirect:/";
     }
 
