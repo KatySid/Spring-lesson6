@@ -97,3 +97,11 @@ Column "TITLE" not found; SQL statement:
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1313)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1302)
 	at ru.geekbrains.spring.one.SpringOneApplication.main(SpringOneApplication.java:23)
+2021-04-27 17:08:52 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CATEGORIES" не найдена
+Table "CATEGORIES" not found; SQL statement:
+ CREATE TABLE products (id bigserial PRIMARY KEY, title VARCHAR(255), price int, category_id bigint REFERENCES categories (id)); [42102-200]
+2021-04-27 17:10:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CATEGORIES" не найдена
+Table "CATEGORIES" not found; SQL statement:
+ CREATE TABLE products (id bigserial PRIMARY KEY, title VARCHAR(255), price int, category_id bigint REFERENCES categories (id)); [42102-200]
