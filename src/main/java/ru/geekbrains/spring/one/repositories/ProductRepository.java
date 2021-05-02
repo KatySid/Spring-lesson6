@@ -26,7 +26,14 @@ public class ProductRepository {
             return products;
         }
     }
-
+    public List<Product> findByCategory(Long id) {
+        try (Session session = hibernateUtils.getCurrentSession()) {
+            session.beginTransaction();
+            List<Product> products = session.createQuery("select p from Product p where p.category = "+ id, Product.class).getResultList();
+            session.getTransaction().commit();
+            return products;
+        }
+    }
     public void save(Product product) {
         try (Session session = hibernateUtils.getCurrentSession()) {
             session.beginTransaction();

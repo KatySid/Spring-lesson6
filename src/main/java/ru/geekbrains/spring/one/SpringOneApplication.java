@@ -2,11 +2,7 @@ package ru.geekbrains.spring.one;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.TreeMap;
 
 @SpringBootApplication
 public class SpringOneApplication {

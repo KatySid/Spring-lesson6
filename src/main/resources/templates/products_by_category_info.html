@@ -11,14 +11,17 @@
 
 <body>
     <div class="container">
-        <h1>Каталог</h1>
+        <h1>Список продуктов категории</h1>
+        <h1 th:text="${category_id}"></h1>
+        <div th:if="${category_id == null}">
+            <h5>Товаров данной категории нет</h5>
+        </div>
         <table class="table table-hover">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>Название</th>
                 <th>Цена</th>
-                <th>Категория товара</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -27,7 +30,6 @@
                 <td th:text="${p.id}"/>
                 <td th:text="${p.title}"/>
                 <td th:text="${p.price}"/>
-                <td> <a th:href="@{'/category/' + ${p.category.id}}" th:text="${p.category.title}"/></td>
                 <td>
                     <a class="btn btn-danger" th:href="@{'/products/delete/' + ${p.id}}">Удалить запись</a>
                 </td>
@@ -35,6 +37,7 @@
             </tbody>
         </table>
         <a th:href="@{/products/add}" class="btn btn-primary">Добавить новый товар</a>
+        <a th:href="@{/}">На главную страницу</a>
     </div>
 </body>
 </html>
