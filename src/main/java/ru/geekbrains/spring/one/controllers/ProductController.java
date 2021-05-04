@@ -1,6 +1,7 @@
 package ru.geekbrains.spring.one.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,23 +11,24 @@ import ru.geekbrains.spring.one.services.CategoryService;
 import ru.geekbrains.spring.one.services.ProductService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class ProductController {
-    private ProductService productService;
-    private CategoryService categoryService;
-
-    @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-    }
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
     @GetMapping("/")
-    public String showAllProductsPage(Model model) {
-        List<Product> products = productService.findAll();
-        model.addAttribute("products", products);
+    public String showAllProductsPage(Model model,
+                                      @RequestParam (name = "minPrice", defaultValue = "0") int minPrice,
+                                      @RequestParam (name = "p", defaultValue = "1") int pageIndex ,
+                                      @RequestParam(name = "maxPrice", defaultValue =(Integer.MAX_VALUE)+"") int maxPrice,
+                                      @RequestParam (name = "partOfTitle", defaultValue = "%") String partOfTitle) {
+        if(pageIndex<1){
+            pageIndex=1;
+        }
+       Page<Product> page = productService.findAllByPriceBetweenAndTitle(minPrice, maxPrice, "%"+partOfTitle+"%",pageIndex-1,10);
+       model.addAttribute("page", page);
         return "index";
     }
 
@@ -41,7 +43,7 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public String showProductInfo(@PathVariable(name = "id") Long id, Model model) {
         productService.findOneById(id).ifPresent(p -> model.addAttribute("product", p));
-        return "student_info";
+        return "product_info";
     }
 
     @GetMapping("/products/add")

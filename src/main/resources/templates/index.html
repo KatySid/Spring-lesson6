@@ -23,9 +23,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="p : ${products}">
+            <tr th:each="p : ${page.getContent()}">
                 <td th:text="${p.id}"/>
-                <td th:text="${p.title}"/>
+                <td>
+                    <a th:text="${p.title}" th:href="@{'/products/' + ${p.id}}"></a>
+                </td>
                 <td th:text="${p.price}"/>
                 <td> <a th:href="@{'/category/' + ${p.category.id}}" th:text="${p.category.title}"/></td>
                 <td>
@@ -34,7 +36,31 @@
             </tr>
             </tbody>
         </table>
+
+        <nav aria-label="Page navigation" th:if="${page.getTotalPages() > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, page.getTotalPages())}">
+                    <a th:class="page-link" th:text="${i}" th:href="@{'/?p=' + ${i}}"></a>
+                </li>
+            </ul>
+        </nav>
+
         <a th:href="@{/products/add}" class="btn btn-primary">Добавить новый товар</a>
     </div>
+    <form method="GET" th:action="@{/}">
+        <div class="mb-3">
+            <label for="minPriceField" class="form-label">Минимальная стоимость</label>
+            <input type="number" class="form-control" id="minPriceField" name="minPrice">
+        </div>
+        <div class="mb-3">
+            <label for="maxPriceField" class="form-label">Максимальная стоимость</label>
+            <input type="number" class="form-control" id="maxPriceField" name="maxPrice">
+        </div>
+        <div class="mb-3">
+            <label for="partOfTitleField" class="form-label">Название</label>
+            <input type="text" class="form-control" id="partOfTitleField" name="partOfTitle">
+        </div>
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </form>
 </body>
 </html>

@@ -1,61 +1,20 @@
 package ru.geekbrains.spring.one.repositories;
 
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.geekbrains.spring.one.model.Category;
 import ru.geekbrains.spring.one.model.Product;
-import ru.geekbrains.spring.one.utils.HibernateUtils;
 
 import java.util.List;
-import java.util.Optional;
 
-@Component
-public class ProductRepository {
-    private HibernateUtils hibernateUtils;
+@Repository
+public interface ProductRepository extends JpaRepository<Product,Long> {
+     List<Product> findAllByCategory(Category category);
+     Page<Product> findAllByPriceBetweenAndTitleLike(int minPrice, int maxPrice, String partOfTitle, Pageable pagable);
 
-    @Autowired
-    public ProductRepository(HibernateUtils hibernateUtils) {
-        this.hibernateUtils = hibernateUtils;
-    }
 
-    public List<Product> findAll() {
-        try (Session session = hibernateUtils.getCurrentSession()) {
-            session.beginTransaction();
-            List<Product> products = session.createQuery("from Product").getResultList();
-            session.getTransaction().commit();
-            return products;
-        }
-    }
-    public List<Product> findByCategory(Long id) {
-        try (Session session = hibernateUtils.getCurrentSession()) {
-            session.beginTransaction();
-            List<Product> products = session.createQuery("select p from Product p where p.category = "+ id, Product.class).getResultList();
-            session.getTransaction().commit();
-            return products;
-        }
-    }
-    public void save(Product product) {
-        try (Session session = hibernateUtils.getCurrentSession()) {
-            session.beginTransaction();
-            session.saveOrUpdate(product);
-            session.getTransaction().commit();
-        }
-    }
 
-    public Optional<Product> findOneById(Long id) {
-        try (Session session = hibernateUtils.getCurrentSession()) {
-            session.beginTransaction();
-            Optional<Product> product = Optional.ofNullable(session.get(Product.class, id));
-            session.getTransaction().commit();
-            return product;
-        }
-    }
-
-    public void deleteById(Long id) {
-        try (Session session = hibernateUtils.getCurrentSession()) {
-            session.beginTransaction();
-            session.createQuery("delete from Product p where p.id = " + id).executeUpdate();
-            session.getTransaction().commit();
-        }
-    }
 }
