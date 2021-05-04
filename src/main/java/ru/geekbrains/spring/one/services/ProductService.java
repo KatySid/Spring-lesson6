@@ -1,28 +1,31 @@
 package ru.geekbrains.spring.one.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.geekbrains.spring.one.model.Category;
 import ru.geekbrains.spring.one.model.Product;
+import ru.geekbrains.spring.one.repositories.CategoryRepository;
 import ru.geekbrains.spring.one.repositories.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    public Page<Product> findAll(int page, int size) {
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+        return productRepository.findAll(PageRequest.of(page,size));
     }
 
     public Optional<Product> findOneById(Long id) {
-        return productRepository.findOneById(id);
+        return productRepository.findById(id);
     }
 
     public void save(Product product) {
@@ -34,6 +37,15 @@ public class ProductService {
     }
 
     public List<Product> findByCategory(Long id) {
-        return productRepository.findByCategory(id);
+        Category category = categoryRepository.findById(id).get();
+        return productRepository.findAllByCategory(category); }
+
+    public Page<Product> findAllByPriceBetweenAndTitle(int minPrice,
+                                                       int maxPrice,
+                                                       String partOfTitle,
+                                                       int page, int size){
+        return productRepository.findAllByPriceBetweenAndTitleLike(minPrice, maxPrice, partOfTitle,
+                                                                    PageRequest.of(page,size));
     }
+
 }

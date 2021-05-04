@@ -11,7 +11,7 @@
 
 <body>
     <div class="container">
-        <h1>Список продуктов категории</h1>
+        <h1>Продукты категории</h1>
         <h1 th:text="${category_id}"></h1>
         <div th:if="${category_id == null}">
             <h5>Товаров данной категории нет</h5>
@@ -28,7 +28,9 @@
             <tbody>
             <tr th:each="p : ${products}">
                 <td th:text="${p.id}"/>
-                <td th:text="${p.title}"/>
+                <td >
+                    <a th:text="${p.title}" th:href="@{'/products/' + ${p.id}}"></a>
+                </td>
                 <td th:text="${p.price}"/>
                 <td>
                     <a class="btn btn-danger" th:href="@{'/products/delete/' + ${p.id}}">Удалить запись</a>

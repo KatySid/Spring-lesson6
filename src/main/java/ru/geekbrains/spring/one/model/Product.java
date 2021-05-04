@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "products")
@@ -21,9 +22,6 @@ public class Product {
 
     @Column(name = "price")
     private int price;
-
-    public Product() {
-    }
 
     @ManyToOne
     @JoinColumn(name = "category_id")
